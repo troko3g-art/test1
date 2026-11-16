@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Test de Dixitalización Aplicada ao Sector Produtivo · 100 preguntas</title>
+<style>
+  :root {
+    --azul-fondo: #f2f7fc;
+    --tarxeta: #eaf3fb;
+    --borde: #cfe0ef;
+    --verde: #1e8e3e;
+    --verde-claro: #e6f4ea;
+    --vermello: #c5221f;
+    --vermello-claro: #fce8e6;
+    --texto: #1f2937;
+    --primario: #1a56a0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--azul-fondo);
+    color: var(--texto);
+  }
+  header.topo {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #ffffff;
+    border-bottom: 2px solid var(--borde);
+    padding: 12px 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  }
+  header.topo h1 {
+    margin: 0 0 4px 0;
+    font-size: 1.15rem;
+    color: var(--primario);
+  }
+  header.topo p.sub { margin: 0; font-size: .85rem; color: #5b6b7c; }
+  .barra-estado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .marcador {
+    font-weight: 600;
+    font-size: .9rem;
+    background: var(--tarxeta);
+    border: 1px solid var(--borde);
+    border-radius: 20px;
+    padding: 4px 14px;
+  }
+  .progreso {
+    flex: 1;
+    min-width: 140px;
+    height: 10px;
+    background: #dde8f2;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .progreso > div {
+    height: 100%;
+    width: 0%;
+    background: var(--primario);
+    transition: width .3s;
+  }
+  button.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    background: var(--primario);
+  }
+  button.btn.secundario { background: #5b6b7c; }
+  button.btn.verde { background: var(--verde); }
+  button.btn:hover { filter: brightness(1.1); }
+  main { max-width: 820px; margin: 0 auto; padding: 18px 16px 60px; }
+  .separador-ud {
+    margin: 28px 0 12px;
+    padding: 10px 16px;
+    background: var(--primario);
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .pregunta {
+    background: var(--tarxeta);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 14px 0;
+  }
+  .pregunta .enunciado {
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .num {
+    display: inline-block;
+    background: var(--primario);
+    color: #fff;
+    border-radius: 6px;
+    font-size: .78rem;
+    padding: 1px 8px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .etiqueta-tipo {
+    display: inline-block;
+    font-size: .7rem;
+    color: #5b6b7c;
+    border: 1px solid var(--borde);
+    background: #fff;
+    border-radius: 10px;
+    padding: 1px 8px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .opcions label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    line-height: 1.35;
+    font-size: .93rem;
+  }
+  .opcions label:hover { background: #dcebf7; }
+  .opcions input { margin-top: 3px; accent-color: var(--primario); flex-shrink: 0; }
+  .opcions label.correcta { background: var(--verde-claro); outline: 1px solid #b7dfc2; }
+  .opcions label.incorrecta { background: var(--vermello-claro); outline: 1px solid #f3b6b3; }
+  .marca { margin-left: auto; font-weight: 700; flex-shrink: 0; }
+  .marca.ok { color: var(--verde); }
+  .marca.mal { color: var(--vermello); }
+  .resultados-pregunta { margin-top: 8px; font-size: .88rem; font-weight: 600; }
+  .resultados-pregunta.bien { color: var(--verde); }
+  .resultados-pregunta.mal { color: var(--vermello); }
+  .pregunta.corrixida { border-color: #9dbdd8; }
+  .explicacion {
+    margin-top: 8px;
+    font-size: .84rem;
+    color: #43566b;
+    background: #ffffff;
+    border-left: 3px solid var(--primario);
+    border-radius: 6px;
+    padding: 8px 10px;
+    display: none;
+  }
+  .accions-pregunta { margin-top: 10px; }
+  .accions-pregunta button {
+    background: #fff;
+    color: var(--primario);
+    border: 1px solid var(--primario);
+    border-radius: 8px;
+    padding: 5px 14px;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .accions-pregunta button:hover { background: var(--primario); color: #fff; }
+  .resumo-final {
+    display: none;
+    margin-top: 24px;
+    background: #fff;
+    border: 2px solid var(--primario);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+  }
+  .resumo-final h2 { margin: 0 0 6px; color: var(--primario); }
+  .nota-grande { font-size: 2.6rem; font-weight: 800; color: var(--primario); }
+  @media (max-width: 560px) {
+    .opcions label { font-size: .88rem; }
+    .nota-grande { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <h1>Dixitalización Aplicada ao Sector Produtivo · Test de repaso (100 preguntas)</h1>
+  <p class="sub">UD1: A transformación dixital · UD2: Intelixencia Artificial e Big Data — CIFP Ánxel Casal</p>
+  <div class="barra-estado">
+    <span class="marcador" id="marcador">Correctas: 0 / 100 · Respondidas: 0 / 100</span>
+    <div class="progreso"><div id="barra"></div></div>
+    <button class="btn verde" onclick="corrixirTodo()">Corrixir todo</button>
+    <button class="btn secundario" onclick="reiniciar()">Reiniciar</button>
+  </div>
+</header>
+
+<main id="contido"></main>
+
+<div class="resumo-final" id="resumo">
+  <h2>Resultado do test</h2>
+  <div class="nota-grande" id="notaFinal"></div>
+  <p id="detalleFinal"></p>
+</div>
+
+<script>
+// TIPOS: "opcional" (unha resposta correcta) · "vf" (verdadeiro/falso) · "multipla" (varias correctas, todas deben acertarse)
+// As opcións das preguntas "opcional" e "multipla" barállanse en cada carga da páxina (ver barallarOpcions).
+const TOTAL = 100;
+const preguntas = [
+  // ===================== UD1: A TRANSFORMACIÓN DIXITAL =====================
+  { ud: 1, tipo: "opcional", q: "En que consiste a dixitalización nos sistemas produtivos?",
+    o: [
+      "Integrar tecnoloxías dixitais nas operacións para optimizar recursos e decidir con datos",
+      "Substituír tódalas tarefas manuais por máquinas e eliminar postos de traballo",
+      "Converter exclusivamente documentos en papel a formato dixital para aforrar espazo",
+      "Dotar aos traballadores de ordenadores e contas de correo corporativas modernas"
+    ], c: [0],
+    ex: "A dixitalización integra tecnoloxías dixitais nas operacións tradicionais para optimizar recursos, mellorar a eficiencia e decidir con datos." },
+
+  { ud: 1, tipo: "opcional", q: "Cal é a diferenza principal entre dixitalización e automatización?",
+    o: [
+      "A automatización substitúe tarefas repetitivas; a dixitalización transforma a xestión da información",
+      "Son dous termos equivalentes que se usan como sinónimos na práctica cotiá das empresas",
+      "A dixitalización substitúe tarefas manuais; a automatización só almacena datos na nube",
+      "A automatización aplícase só na industria pesada; a dixitalización só nas oficinas"
+    ], c: [0],
+    ex: "A automatización céntrase en substituír tarefas repetitivas; a dixitalización transforma como as organizacións xestionan a información." },
+
+  { ud: 1, tipo: "vf", q: "A dixitalización consiste só en converter elementos físicos a dixitais.",
+    o: ["Verdadeiro", "Falso"], c: [1],
+    ex: "Falso: vai máis aló, senta as bases para estratexias máis avanzadas como a transformación dixital." },
+
+  { ud: 1, tipo: "vf", q: "A Cuarta Revolución Industrial (Industria 4.0) afecta só ás grandes industrias e ao sector tecnolóxico.",
+    o: ["Verdadeiro", "Falso"], c: [1],
+    ex: "Falso: a súa influencia é transversal e chega a todos os ámbitos produtivos (agricultura, sanidade, carpintería...)." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona os impactos máis significativos da dixitalización nos sectores produtivos:",
+    o: [
+      "Eficiencia operativa",
+      "Innovación en produtos e servizos",
+      "Cadeas de subministración intelixentes",
+      "Máis erros e tempos de inactividade"
+    ], c: [0, 1, 2],
+    ex: "A dixitalización mellora a eficiencia, impulsa a innovación e crea cadeas de subministración intelixentes, ademais de modelos de negocio disruptivos e mellor interacción co cliente." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as vantaxes directas da dixitalización:",
+    o: [
+      "Eficiencia operativa",
+      "Mellora da toma de decisións grazas aos datos",
+      "Acceso a novos mercados e innovación en produtos e servizos",
+      "Mellora da relación co cliente"
+    ], c: [0, 1, 2, 3],
+    ex: "Todas son vantaxes: eficiencia, mellores decisións, novos mercados, innovación e mellor relación co cliente." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona os desafíos da dixitalización:",
+    o: [
+      "Seguridade da información (ciberataques e fendas de seguridade)",
+      "Fenda dixital entre empresas, rexións e persoas",
+      "Cambio organizacional e investimento inicial",
+      "Regulación e cumprimento normativo"
+    ], c: [0, 1, 2, 3],
+    ex: "Todos son desafíos citados no material: seguridade, fenda dixital, cambio organizacional, investimento inicial e regulación." },
+
+  { ud: 1, tipo: "opcional", q: "Con que aplicación pasou Nike de fabricante de roupa e calzado a provedor de experiencias personalizadas?",
+    o: ["Nike+", "Nike Store", "Nike Cloud", "Nike ERP"], c: [0],
+    ex: "Coa aplicación Nike+, Nike usa datos de clientes para ofrecer produtos personalizados e mellorar o compromiso." },
+
+  { ud: 1, tipo: "opcional", q: "Que tecnoloxía integrou IKEA na súa aplicación IKEA Place?",
+    o: [
+      "Realidade aumentada, para visualizar mobles no propio fogar antes da compra",
+      "Realidade virtual, para percorrer tendas simuladas sen saír de casa",
+      "Blockchain, para garantir a procedencia dos materiais dos mobles",
+      "Impresión 3D, para fabricar os mobles directamente na casa do cliente"
+    ], c: [0],
+    ex: "IKEA Place usa realidade aumentada para visualizar os mobles en casa antes de comprar, mellorando a experiencia e as vendas en liña." },
+
+  { ud: 1, tipo: "multipla", q: "En que tecnoloxías investiu BBVA para innovar na banca dixital?",
+    o: [
+      "Blockchain",
+      "Intelixencia artificial",
+      "Banca móbil",
+      "Robótica industrial"
+    ], c: [0, 1, 2],
+    ex: "BBVA investiu en blockchain, intelixencia artificial e banca móbil para ofrecer servizos financeiros máis personalizados." },
+
+  { ud: 1, tipo: "opcional", q: "Que significa a sigla IT?",
+    o: [
+      "Tecnoloxías da Información: software, redes, bases de datos e xestión da información",
+      "Tecnoloxías de Operación: control de maquinaria, sensores e actuadores",
+      "Tecnoloxías Industriais: automatización e robótica de fábrica",
+      "Tecnoloxías Integradas: sistemas que unen a oficina coa produción"
+    ], c: [0],
+    ex: "IT son as Tecnoloxías da Información, xestionadas por persoal especializado en software, redes e datos." },
+
+  { ud: 1, tipo: "opcional", q: "En que se centran as áreas de OT (Tecnoloxías de Operación)?",
+    o: [
+      "Na maquinaria, os procesos físicos e o control de sensores e actuadores",
+      "No software de xestión, as bases de datos e as redes corporativas da empresa",
+      "No deseño de páxinas web e nas campañas de marketing dixital da marca",
+      "Na formación do persoal e na xestión administrativa e contable"
+    ], c: [0],
+    ex: "OT céntrase na maquinaria, procesos físicos e control de dispositivos como sensores ou actuadores." },
+
+  { ud: 1, tipo: "opcional", q: "Que é a converxencia IT/OT?",
+    o: [
+      "A interconexión dos sistemas de control das máquinas (OT) cos sistemas de xestión de datos (IT)",
+      "A substitución dos sistemas de xestión por sistemas de control industrial modernos",
+      "A separación física entre as redes informáticas e as redes industriais da planta",
+      "Unha norma europea de seguridade para sistemas industriais conectados á rede"
+    ], c: [0],
+    ex: "Coa Industria 4.0, IT e OT deixan de ser mundos separados e interconéctanse: é a converxencia IT/OT." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as vantaxes da converxencia IT/OT:",
+    o: [
+      "Maior eficiencia operativa e mellor coordinación entre departamentos",
+      "Predición e mantemento intelixente para previr avarías",
+      "Toma de decisións informada con datos en tempo real",
+      "Trazabilidade completa do produto ata o cliente final"
+    ], c: [0, 1, 2, 3],
+    ex: "Todas son vantaxes da converxencia IT/OT segundo o material." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona os retos da converxencia IT/OT:",
+    o: [
+      "Seguridade: un ciberataque pode afectar directamente á produción física",
+      "Complexidade técnica: precisanse perfís que coñezan software e sistemas industriais",
+      "Cambio cultural: departamentos que traballaban illados deben colaborar",
+      "Elimina a necesidade de calquera medida de ciberseguridade"
+    ], c: [0, 1, 2],
+    ex: "Os retos son a seguridade, a complexidade técnica e o cambio cultural. A opción «Elimina a necesidade de calquera medida de ciberseguridade» é falsa." },
+
+  { ud: 1, tipo: "multipla", q: "Que combina un sistema ciberfísico (CPS)?",
+    o: [
+      "Elementos físicos: sensores, máquinas, robots ou estruturas industriais",
+      "Elementos dixitais: software, algoritmos, bases de datos e IA",
+      "Comunicación en rede entre dispositivos, servidores e persoas",
+      "Soamente hardware sen conexión"
+    ], c: [0, 1, 2],
+    ex: "Un CPS combina elementos físicos, elementos dixitais e comunicación en rede." },
+
+  { ud: 1, tipo: "opcional", q: "Cal é a diferencia entre a converxencia IT/OT e os sistemas ciberfísicos (CPS)?",
+    o: [
+      "A converxencia interconecta os dous mundos; os CPS son adaptativos e melloran co uso",
+      "Son dous nomes equivalentes para o mesmo nivel de integración física e dixital",
+      "Os CPS só conectan sensores; a converxencia só une programas de oficina",
+      "A converxencia substituíu aos CPS por ser unha tecnoloxía máis recente e barata"
+    ], c: [0],
+    ex: "Os CPS son un nivel superior de integración: o físico e o dixital interactúan de maneira automática, intelixente e continua." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona os retos asociados á implantación dos sistemas ciberfísicos:",
+    o: [
+      "Costes iniciais elevados de instalación e integración",
+      "Formación do persoal en equipos físicos e software",
+      "Seguridade: son vulnerables a ciberataques",
+      "Interoperabilidade entre tecnoloxías de distintos fabricantes"
+    ], c: [0, 1, 2, 3],
+    ex: "Todos son retos dos CPS: custes, formación, seguridade e interoperabilidade." },
+
+  { ud: 1, tipo: "opcional", q: "Por que se denominan habilitadoras as Tecnoloxías Habilitadoras Dixitais (THD)?",
+    o: [
+      "Porque facilitan, potencian ou transforman procesos tradicionais en escenarios máis eficientes",
+      "Porque son obrigatorias en todos os procesos produtivos por normativa europea",
+      "Porque substitúen completamente calquera proceso tradicional da empresa",
+      "Porque só funcionan en grandes industrias con departamentos técnicos propios"
+    ], c: [0],
+    ex: "O termo habilitadoras reflicte a súa capacidade de facilitar, potenciar ou transformar procesos tradicionais." },
+
+  { ud: 1, tipo: "vf", q: "A implantación das THD afecta unicamente ás grandes industrias.",
+    o: ["Verdadeiro", "Falso"], c: [1],
+    ex: "Falso: está a espallarse de forma transversal por educación, sanidade, comercio, agricultura, hostalaría..." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona exemplos de sinerxia entre tecnoloxías habilitadoras dixitais:",
+    o: [
+      "A intelixencia artificial precisa do Big Data para analizar grandes volumes de información",
+      "A Internet das Cousas precisa de redes 5G para transmitir datos en tempo real",
+      "Os xemelgos dixitais precisan da realidade virtual para simular procesos",
+      "As tecnoloxías habilitadoras funcionan sempre de forma totalmente illada"
+    ], c: [0, 1, 2],
+    ex: "As THD non actúan illadas: forman un ecosistema dixital interdependente." },
+
+  { ud: 1, tipo: "opcional", q: "Que é a Internet das Cousas (IoT)?",
+    o: [
+      "A conexión de obxectos físicos á Internet para intercambiar datos e actuar sen intervención humana",
+      "Unha rede privada que conecta unicamente os ordenadores e impresoras dunha mesma fábrica",
+      "Un protocolo de cableado industrial para comunicar máquinas pesadas entre si",
+      "Un programa de deseño asistido para crear obxectos en tres dimensións"
+    ], c: [0],
+    ex: "A IoT conecta obxectos físicos á Internet para que intercambien datos e actúen en consecuencia." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona os compoñentes do ecosistema IoT:",
+    o: [
+      "Sensores e actuadores",
+      "Conectividade (Wi-Fi, 5G, LPWAN)",
+      "Plataformas na nube que almacenan e analizan a información",
+      "Aplicacións intelixentes para visualizar ou automatizar procesos"
+    ], c: [0, 1, 2, 3],
+    ex: "O ecosistema IoT está formado por sensores/actuadores, conectividade, plataformas na nube e aplicacións intelixentes." },
+
+  { ud: 1, tipo: "opcional", q: "Que é o IIoT (Industrial Internet of Things)?",
+    o: [
+      "A IoT aplicada á industria: monitoriza máquinas e instalacións para detectar anomalías e prever avarías",
+      "A IoT aplicada ao fogar: domótica, electrodomésticos intelixentes e asistentes de voz",
+      "A IoT aplicada á saúde: dispositivos médicos e monitorización remota de pacientes",
+      "A IoT aplicada ao transporte: vehículos conectados e xestión de flotas loxísticas"
+    ], c: [0],
+    ex: "O IIoT é a IoT industrial, orientada á monitorización e o mantemento preventivo." },
+
+  { ud: 1, tipo: "opcional", q: "Que é a Intelixencia Artificial?",
+    o: [
+      "Técnicas que permiten a unha máquina simular procesos da intelixencia humana: aprender ou decidir",
+      "Un programa que executa instrucións fixas programadas previamente por unha persoa",
+      "Unha base de datos moi grande con información clasificada e indexada por temas",
+      "Unha rede de servidores que almacena e procesa datos na nube de forma distribuída"
+    ], c: [0],
+    ex: "A IA simula procesos da intelixencia humana como aprender, recoñecer patróns e adaptarse." },
+
+  { ud: 1, tipo: "multipla", q: "Con que outras tecnoloxías está vinculado o Big Data?",
+    o: [
+      "Precisa da IoT para recoller datos en tempo real",
+      "É imprescindible para adestrar modelos de intelixencia artificial",
+      "Está vinculado ao cloud computing, que ofrece espazo e potencia de cálculo",
+      "Pode mellorar a ciberseguridade detectando patróns anómalos"
+    ], c: [0, 1, 2, 3],
+    ex: "O Big Data non actúa illadamente: relaciónase coa IoT, a IA, a nube e a ciberseguridade." },
+
+  { ud: 1, tipo: "multipla", q: "Que características destacan nas redes 5G como tecnoloxía habilitadora?",
+    o: [
+      "Baixa latencia (tempos de resposta mínimos)",
+      "Alta velocidade de transferencia",
+      "Capacidade para conectar miles de dispositivos simultaneamente",
+      "Só mellora a chamada de voz móbil"
+    ], c: [0, 1, 2],
+    ex: "O 5G transforma a comunicación entre dispositivos: baixa latencia, alta velocidade e masiva conectividade." },
+
+  { ud: 1, tipo: "opcional", q: "Que é a robótica colaborativa (cobótica)?",
+    o: [
+      "Robots deseñados para traballar en colaboración directa coas persoas, sen barreiras físicas",
+      "Robots industriais que traballan sempre illados en celas de seguridade pechadas",
+      "Robots autónomos que substitúen por completo ao persoal operario da fábrica",
+      "Un software de simulación para programar brazos robóticos industriais complexos"
+    ], c: [0],
+    ex: "Os cobots comparten espazo e tarefas coas persoas, actuando como compañeiros de traballo." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as características principais dos robots colaborativos:",
+    o: [
+      "Seguridade: sensores que deteñen o robot ante o contacto cun humano",
+      "Flexibilidade: reprogámense facilmente para distintas tarefas",
+      "Adaptabilidade: funcionan en espazos pequenos, sen gaiolas nin illamentos",
+      "Rentabilidade: accesibles para PEMEs, con custo inferior ao da robótica tradicional"
+    ], c: [0, 1, 2, 3],
+    ex: "Seguridade, flexibilidade, adaptabilidade e rentabilidade son as catro características dos cobots." },
+
+  { ud: 1, tipo: "opcional", q: "Cal é a diferencia entre Realidade Virtual (RV) e Realidade Aumentada (RA)?",
+    o: [
+      "A RV crea un contorno completamente dixital; a RA engade información superposta ao mundo real",
+      "A RA crea mundos totalmente virtuais; a RV superpón imaxes sobre o mundo real",
+      "A RV só se usa en videoxogos; a RA só en aplicacións médicas e educativas",
+      "Son a mesma tecnoloxía con nomes distintos segundo o fabricante do dispositivo"
+    ], c: [0],
+    ex: "RV: contorno completamente dixital. RA: información superposta sobre o mundo real." },
+
+  { ud: 1, tipo: "multipla", q: "Que permiten as tecnoloxías inmersivas (RV e RA)?",
+    o: [
+      "Ensaiar operacións complexas sen riscos reais",
+      "Visualizar montaxes, estruturas ou maquinaria antes de executalas",
+      "Recibir instrucións paso a paso mentres se traballa cun equipo real",
+      "Substituír sempre a formación práctica real"
+    ], c: [0, 1, 2],
+    ex: "RV e RA permiten formarse, planificar e ensaiar reducindo custes e mellorando a seguridade, pero non substitúen sempre a práctica real." },
+
+  { ud: 1, tipo: "multipla", q: "Por que é moi segura a tecnoloxía blockchain?",
+    o: [
+      "Os datos están replicados en moitos sitios á vez (non hai un único servidor que poida ser hackeado)",
+      "Cada bloque leva a pegada do anterior: se alguén cambia algo, rompe toda a cadea",
+      "Os participantes non necesitan confiar uns noutros: confían na rede e no algoritmo",
+      "Todo queda rexistrado e pódese auditar"
+    ], c: [0, 1, 2, 3],
+    ex: "Replicación, encadeamento de bloques, confianza no algoritmo e auditoría fan a blockchain moi segura." },
+
+  { ud: 1, tipo: "opcional", q: "Que é un xemelgo dixital (digital twin)?",
+    o: [
+      "Unha réplica virtual dun obxecto ou proceso real, conectada en tempo real cos seus datos",
+      "Unha copia de seguridade dos ficheiros da empresa nun disco duro externo",
+      "Dous ordenadores idénticos configurados para traballar en paralelo ou en espello",
+      "Un programa de deseño 2D que representa pezas industriais sinxelas en planta"
+    ], c: [0],
+    ex: "O xemelgo dixital reflexa o sistema real, aprende del e pode simular como reaccionará ante distintas situacións." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as fases do funcionamento dun xemelgo dixital:",
+    o: [
+      "Modelado dixital da máquina ou proceso",
+      "Conexión de sensores na versión física",
+      "Sincronización en tempo real dos datos co xemelgo",
+      "Análise e simulación para predicir fallos ou optimizar rendementos"
+    ], c: [0, 1, 2, 3],
+    ex: "Modelado, sensores, sincronización e análise/simulación son as catro fases." },
+
+  { ud: 1, tipo: "opcional", q: "Que é a fabricación aditiva?",
+    o: [
+      "Unha técnica que crea obxectos físicos capa a capa a partir dun modelo dixital",
+      "Un método que parte dun bloque de material que se recorta ou fresa",
+      "Un sistema de almacén automatizado que clasifica caixas con sensores",
+      "Unha técnica de soldadura tradicional aplicada a pezas metálicas pesadas"
+    ], c: [0],
+    ex: "Na fabricación aditiva só se engade o material necesario, reducindo desperdicio e permitindo formas complexas." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as vantaxes da fabricación aditiva:",
+    o: [
+      "Personalización total do produto",
+      "Redución dos tempos de fabricación e prototipado máis rápido",
+      "Sostibilidade: minimiza residuos e a cantidade de material",
+      "Alta velocidade de produción para grandes volumes"
+    ], c: [0, 1, 2],
+    ex: "A baixa velocidade para grandes volumes é unha limitación, non unha vantaxe." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as limitacións actuais da fabricación aditiva:",
+    o: [
+      "Baixa velocidade de produción para grandes volúmenes",
+      "Resistencia limitada das pezas",
+      "Altos custos dos materiais e do postprocesado",
+      "Non permite ningún tipo de personalización"
+    ], c: [0, 1, 2],
+    ex: "As limitacións son velocidade para grandes volumes, resistencia limitada e custos de materiais e postprocesado." },
+
+  { ud: 1, tipo: "multipla", q: "Que implica que as empresas avancen cara modelos máis automatizados, flexibles e baseados en datos coas THD?",
+    o: [
+      "Menos tarefas repetitivas e maior foco en tarefas de valor engadido",
+      "Adaptación da produción en tempo real segundo a demanda",
+      "Colaboración entre humanos e máquinas (robótica colaborativa)",
+      "Xestión remota ou en liña de procesos, clientes e provedores"
+    ], c: [0, 1, 2, 3],
+    ex: "Todos son cambios nos modelos produtivos polo impacto das THD." },
+
+  { ud: 1, tipo: "vf", q: "Coa incorporación das THD xa non abonda con dominar un oficio: é necesario comprender o funcionamento das ferramentas dixitais que afectan á propia actividade.",
+    o: ["Verdadeiro", "Falso"], c: [0],
+    ex: "Verdadeiro: xéranse novos perfís profesionais e transfórmanse os roles existentes." },
+
+  { ud: 1, tipo: "opcional", q: "Que é a nube (cloud)?",
+    o: [
+      "Servidores conectados a Internet que ofrecen recursos informáticos baixo demanda",
+      "Unha rede de cables submarinos que interconecta os continentes entre si",
+      "Un programa de correo electrónico para empresas e particulares de pago",
+      "Un disco duro externo portátil para gardar copias de seguridade dos ficheiros"
+    ], c: [0],
+    ex: "A nube son servidores que ofrecen recursos informáticos baixo demanda a través de Internet." },
+
+  { ud: 1, tipo: "opcional", q: "Como se denomina o modelo no que a empresa xestiona todos os seus recursos informáticos de maneira local, con servidores físicos na propia oficina?",
+    o: [
+      "On-premises (infraestrutura tradicional)",
+      "Cloud computing (servizos baixo demanda)",
+      "SaaS (software totalmente xestionado)",
+      "Modelo híbrido (local máis nube)"
+    ], c: [0],
+    ex: "O modelo on-premises ou local implica mercar licenzas, configurar redes e asumir todo o mantemento." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as desvantaxes do modelo tradicional (on-premises):",
+    o: [
+      "Elevado custo inicial: servidores, licenzas, sistemas de seguridade...",
+      "Necesidade de persoal técnico especializado",
+      "Actualizacións, mantemento e escalado complexos",
+      "Acceso desde calquera dispositivo con Internet"
+    ], c: [0, 1, 2],
+    ex: "O acceso desde calquera dispositivo é unha vantaxe da nube, non do modelo local." },
+
+  { ud: 1, tipo: "vf", q: "No modelo tradicional (on-premises), as empresas eran responsables do mantemento tanto do hardware como do software.",
+    o: ["Verdadeiro", "Falso"], c: [0],
+    ex: "Verdadeiro: configuraban redes, mercaban licenzas e asumían todo o mantemento físico e lóxico." },
+
+  { ud: 1, tipo: "opcional", q: "Cal é unha desvantaxe destacada do modelo cloud?",
+    o: [
+      "Dependencia do provedor e da conexión a Internet para acceder aos servizos",
+      "Imposibilidade de usar servizos colaborativos entre equipos de traballo",
+      "Falta total de seguridade física nos centros de datos do provedor",
+      "Maior necesidade de hardware local que no modelo on-premises clásico"
+    ], c: [0],
+    ex: "A dependencia do provedor e do acceso a Internet, xunto coa exposición a riscos de seguridade, son desvantaxes da nube." },
+
+  { ud: 1, tipo: "opcional", q: "Que é o modelo híbrido de computación?",
+    o: [
+      "Combina recursos propios (local) con servizos na nube, controlando o esencial",
+      "É un modelo totalmente na nube, sen ningún recurso local propio mantido",
+      "É un modelo totalmente local, sen conexión a Internet en ningún momento",
+      "É un modelo reservado só a grandes corporacións e administracións públicas"
+    ], c: [0],
+    ex: "No modelo híbrido, por exemplo, mantense o ERP en local e lévase o correo ou as copias de seguridade á nube." },
+
+  { ud: 1, tipo: "opcional", q: "En que consiste o modelo IaaS (Infraestrutura como servizo)?",
+    o: [
+      "A empresa aluga infraestrutura básica (servidores, redes, almacenamento) e xestiona o software",
+      "O usuario accede a unha aplicación xa totalmente xestionada polo provedor",
+      "O provedor ofrece unha plataforma completa para desenvolver aplicacións novas",
+      "O cliente mantén fisicamente os servidores no seu propio centro de datos"
+    ], c: [0],
+    ex: "En IaaS alúgase a infraestrutura básica; a empresa decide que software instalar e como xestionalo." },
+
+  { ud: 1, tipo: "opcional", q: "Que ofrece o modelo PaaS (Plataforma como Servizo)?",
+    o: [
+      "Unha plataforma completa para desenvolver e executar aplicacións, sen xestionar servidores",
+      "Só espazo de almacenamento en disco para ficheiros e copias de seguridade",
+      "Unha aplicación de escritorio xa instalada no ordenador do cliente final",
+      "Alugamento de hardware físico sen ningún servizo adicional incluído"
+    ], c: [0],
+    ex: "En PaaS a empresa simplemente desenvolve ou executa o seu software sen xestionar a infraestrutura." },
+
+  { ud: 1, tipo: "opcional", q: "Cal é a característica principal do modelo SaaS (Software como Servizo)?",
+    o: [
+      "A aplicación xestiónaa o provedor e accédese por navegador ou app, sen instalación",
+      "O usuario aluga infraestrutura básica e xestiona el mesmo todo o software",
+      "O cliente instala e mantén o software no seu propio servidor local",
+      "Só está dispoñible para grandes empresas con departamentos técnicos"
+    ], c: [0],
+    ex: "SaaS é o modelo máis común para o usuario final: acceso por navegador ou app, con actualizacións automáticas." },
+
+  { ud: 1, tipo: "opcional", q: "Cal das seguintes é un exemplo de plataforma IaaS?",
+    o: [
+      "AWS EC2, Microsoft Azure ou Google Compute Engine",
+      "Google Workspace, Dropbox, Canva ou Salesforce",
+      "Microsoft 365 e Dropbox Business",
+      "Heroku, App Engine e Azure App Services"
+    ], c: [0],
+    ex: "AWS EC2, Azure e Google Compute Engine son exemplos de IaaS." },
+
+  { ud: 1, tipo: "opcional", q: "Cal das seguintes é un exemplo de plataforma PaaS?",
+    o: [
+      "Google App Engine, Heroku e Microsoft Azure App Services",
+      "AWS EC2, Azure Virtual Machines e Google Compute Engine",
+      "Dropbox, Canva, Google Workspace e Salesforce",
+      "Microsoft 365 e Dropbox Business"
+    ], c: [0],
+    ex: "Google App Engine, Heroku e Azure App Services son exemplos de PaaS." },
+
+  { ud: 1, tipo: "opcional", q: "Cal das seguintes é un exemplo de plataforma SaaS?",
+    o: [
+      "Google Workspace, Microsoft 365, Dropbox, Salesforce ou Canva",
+      "AWS EC2, Azure Virtual Machines e Google Compute Engine",
+      "Heroku, Google App Engine e Azure App Services",
+      "Salesforce Platform e AWS Elastic Beanstalk"
+    ], c: [0],
+    ex: "Google Workspace, Microsoft 365, Dropbox, Salesforce e Canva son exemplos de SaaS." },
+
+  { ud: 1, tipo: "opcional", q: "No modelo IaaS, quen xestiona a virtualización e os servidores físicos e redes?",
+    o: [
+      "O provedor do servizo na nube",
+      "A empresa cliente que aluga",
+      "Ambos por igual, segundo o SLA",
+      "Depende do contrato asinado"
+    ], c: [0],
+    ex: "En IaaS o provedor xestiona a virtualización e os servidores físicos; a empresa mantén o SO, middleware, datos e aplicacións." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as funcións estratéxicas da nube:",
+    o: [
+      "Procesamento de grandes volumes de datos en tempo real",
+      "Execución de aplicacións directamente desde o navegador ou unha app lixeira",
+      "Intercambio áxil e seguro de información entre persoas, departamentos ou empresas",
+      "Substitución completa dos sistemas de seguridade da empresa"
+    ], c: [0, 1, 2],
+    ex: "As tres funcións estratéxicas da nube son procesamento de datos, execución de aplicacións e intercambio de información." },
+
+  { ud: 1, tipo: "opcional", q: "Por que xurdiron os modelos de computación distribuída (mist, edge, fog)?",
+    o: [
+      "Porque enviar todo á nube pode ser inviable por latencia, ancho de banda ou seguridade",
+      "Porque a nube deixou de ser segura tras os últimos ciberataques masivos globais",
+      "Porque a normativa europea obriga a procesar os datos dentro do dispositivo final",
+      "Porque os modelos distribuídos son sempre máis baratos que a nube clásica"
+    ], c: [0],
+    ex: "Estes modelos achegan o procesamento ao lugar onde se xeran os datos e complementan (non substitúen) a nube." },
+
+  { ud: 1, tipo: "multipla", q: "Selecciona as vantaxes de filtrar e preprocesar os datos localmente antes de subilos á nube:",
+    o: [
+      "Redución do tráfico de datos",
+      "Resposta máis rápida, sen depender da conexión coa nube",
+      "Seguridade e privacidade: os datos críticos quedan no ámbito local",
+      "Aforro de ancho de banda e recursos de almacenamento na nube"
+    ], c: [0, 1, 2, 3],
+    ex: "Todas son vantaxes do preprocesado local segundo o material." },
+
+  { ud: 1, tipo: "opcional", q: "Que é o mist computing (computación na brétema)?",
+    o: [
+      "O máis local: o preprocesado faise nos propios dispositivos finais (sensores con microprocesador)",
+      "Unha capa intermedia entre o mundo físico e a nube proposta por Cisco Systems",
+      "O procesamento en servidores remotos de gran capacidade dos centros de datos",
+      "Un tipo de almacenamento en discos duros de alta rotación e baixo custo"
+    ], c: [0],
+    ex: "No mist, os dispositivos finais teñen intelixencia mínima pero útil: analizan en tempo real e toman pequenas decisións autónomas." },
+
+  { ud: 1, tipo: "opcional", q: "Que é o edge computing (computación no bordo)?",
+    o: [
+      "Achega o procesamento ao lugar onde se xeran os datos, en nodos locais (gateways, PCs)",
+      "O procesamento en servidores centrais dos grandes centros de datos remotos",
+      "Unha capa intermedia entre o mundo físico e a nube proposta por Cisco",
+      "O preprocesado dentro do propio sensor con microprocesador embebido"
+    ], c: [0],
+    ex: "O edge funciona como un filtro intelixente entre os sensores e a nube: decide que se trata localmente e que se envía." },
+
+  { ud: 1, tipo: "opcional", q: "Que é o fog computing (computación na néboa)?",
+    o: [
+      "Modelo de Cisco: capa intermedia entre o mundo físico e a nube, con procesado en routers próximos",
+      "O preprocesado dentro do propio sensor, a ras do solo, sen nodos intermedios",
+      "Exactamente o mesmo que o edge computing pero con outro nome comercial",
+      "O procesamento en servidores centrais dos grandes centros de datos"
+    ], c: [0],
+    ex: "O fog sitúase nun nivel intermedio: agrega datos de múltiples fontes, analízaos e fíltraos antes de que cheguen á nube." },
+
+  { ud: 1, tipo: "opcional", q: "Cal é a diferencia principal entre edge computing e fog computing?",
+    o: [
+      "O edge procesa xunto á fonte de datos; o fog sitúase nun nivel intermedio da infraestrutura",
+      "Non hai ningunha diferencia real: son dous nomes para o mesmo modelo técnico",
+      "O fog procesa na nube e o edge dentro do propio sensor final da rede",
+      "O edge substitúe completamente á nube e o fog só a complementa ás veces"
+    ], c: [0],
+    ex: "Edge = bordo da rede, xunto á fonte de datos. Fog = capa intermedia (gateways, routers, microcentros de datos)." },
+
+  { ud: 1, tipo: "opcional", q: "Ordeando a xerarquía de computación distribuída desde a cúspide ata o chan, cal é a secuencia correcta?",
+    o: [
+      "Cloud (nube) → Fog (néboa) → Edge (bordo) → Mist (brétema)",
+      "Mist (brétema) → Edge (bordo) → Fog (néboa) → Cloud (nube)",
+      "Cloud (nube) → Edge (bordo) → Fog (néboa) → Mist (brétema)",
+      "Fog (néboa) → Cloud (nube) → Mist (brétema) → Edge (bordo)"
+    ], c: [0],
+    ex: "Cloud (análise complexa e xestión global), fog (punto intermedio), edge (preprocesado xunto á fonte) e mist (a ras do solo, nos sensores)." },
+
+  // ===================== UD2: INTELIXENCIA ARTIFICIAL E BIG DATA =====================
+  { ud: 2, tipo: "opcional", q: "Cal é a diferencia entre dato e información?",
+    o: [
+      "O dato é un valor illado sen significado propio; a información é o dato interpretado",
+      "Son exactamente o mesmo: dous termos intercambiables na práctica cotiá",
+      "A información son os números brutos e o dato é o texto que os explica",
+      "O dato sempre é máis útil que a información para tomar decisións acertadas"
+    ], c: [0],
+    ex: "O dato é a materia prima e a información é o produto elaborado que axuda a comprender a realidade e actuar sobre ela." },
+
+  { ud: 2, tipo: "opcional", q: "Cal das seguintes opcións é un exemplo de DATO?",
+    o: [
+      "Unha lectura de 25 °C no sensor da oficina",
+      "A temperatura media supera o confort laboral",
+      "As vendas subiron un 5 % no último ano",
+      "A maioría fai clic na páxina 3 de resultados"
+    ], c: [0],
+    ex: "Un dato é un valor illado (25 °C, un 5 %, un clic). As outras opcións son información: datos interpretados con contexto." },
+
+  { ud: 2, tipo: "opcional", q: "Segundo o material, cal é a metáfora que resume a relación entre dato e información?",
+    o: [
+      "Os datos son os ladrillos, a información é a parede",
+      "Os datos son a parede, a información é a pintura",
+      "Os datos son a nube, a información a chuvia",
+      "Os datos son o motor, a información o combustible"
+    ], c: [0],
+    ex: "Os datos son os ladrillos e a información é a parede que se constrúe con eles." },
+
+  { ud: 2, tipo: "opcional", q: "Que engloba o concepto de Big Data segundo a UD2?",
+    o: [
+      "Técnicas para recoller, almacenar, procesar e analizar volumes enormes de datos",
+      "Só o almacenamento de grandes ficheiros en discos de alta capacidade",
+      "A compra de máis ordenadores e discos duros para a empresa",
+      "Unha rede social con moitos usuarios e interaccións diarias"
+    ], c: [0],
+    ex: "Big Data transforma volumes enormes de datos en información relevante, que usa a IA para aprender e decidir." },
+
+  { ud: 2, tipo: "multipla", q: "Cales son as 5 V que caracterizan o Big Data?",
+    o: [
+      "Volume",
+      "Velocidade",
+      "Variedade e Veracidade",
+      "Valor"
+    ], c: [0, 1, 2, 3],
+    ex: "Volume, velocidade, variedade, veracidade e valor son as 5 V do Big Data." },
+
+  { ud: 2, tipo: "opcional", q: "A V de Volume no Big Data refírese a...",
+    o: [
+      "A inmensidade de datos xerados constantemente (exabytes diarios) que hai que tratar",
+      "A velocidade coa que chegan os datos e se deben procesar en tempo real",
+      "Os múltiples formatos e fontes distintas das que proceden os datos",
+      "A calidade e a consistencia dos datos recollidos polos sensores"
+    ], c: [0],
+    ex: "O mundo produce diariamente exabytes (10^18 bytes) de datos: iso é o volume." },
+
+  { ud: 2, tipo: "opcional", q: "A V de Velocidade no Big Data refírese a...",
+    o: [
+      "A velocidade coa que chegan os datos e a necesidade de procesalos en tempo real",
+      "O tamaño total dos ficheiros almacenados pola empresa cada ano",
+      "A cantidade de fontes e formatos distintos dos datos recollidos",
+      "A confianza que se pode depositar nos datos recollidos e usados"
+    ], c: [0],
+    ex: "A capacidade de resposta inmediata pode marcar a diferenza entre intervir a tempo ou sufrir unha parada de produción custosa." },
+
+  { ud: 2, tipo: "opcional", q: "Segundo a V de Variedade, que formatos de datos debe tratar un sistema de Big Data?",
+    o: [
+      "Estruturados (bases de datos), semiestruturados (XML) e non estruturados (multimedia)",
+      "Só táboas numéricas organizadas en filas e columnas de bases de datos",
+      "Só documentos de texto redactados en linguaxe natural das persoas",
+      "Só imaxes e vídeos procedentes de cámaras e sensores instalados"
+    ], c: [0],
+    ex: "A variedade obriga a tratar con toda a diversidade de fontes e estruturas." },
+
+  { ud: 2, tipo: "opcional", q: "A que fai referencia a V de Veracidade no Big Data?",
+    o: [
+      "A calidade e consistencia dos datos e a confianza que se pode depositar neles",
+      "A velocidade de transmisión dos datos a través da rede de sensores",
+      "O tamaño do almacenamento necesario para gardalos de forma segura",
+      "O número de usuarios que xeran datos cada día na organización"
+    ], c: [0],
+    ex: "Non todos os datos son fiables: a veracidade mide a súa calidade e consistencia." },
+
+  { ud: 2, tipo: "opcional", q: "Cal é, posiblemente, a dimensión máis importante das 5 V do Big Data?",
+    o: [
+      "Valor: transformar datos brutos en coñecemento para mellorar procesos e reducir custos",
+      "Volume: a cantidade total de datos que xera a organización cada día",
+      "Variedade: a diversidade de formatos e fontes dos datos recollidos",
+      "Velocidade: a rapidez coa que chegan e se procesan os datos na rede"
+    ], c: [0],
+    ex: "O obxectivo final do Big Data é obter valor a partir dos datos." },
+
+  { ud: 2, tipo: "multipla", q: "Selecciona as fases do ciclo de vida dos datos:",
+    o: [
+      "Recollida de datos e almacenamento",
+      "Procesamento (organizar, limpar e transformar)",
+      "Análise e visualización con toma de decisións",
+      "Almacenamento final, eliminación ou reutilización"
+    ], c: [0, 1, 2, 3],
+    ex: "O ciclo vai da recollida á reutilización ou eliminación, pasando por almacenamento, procesamento, análise e visualización." },
+
+  { ud: 2, tipo: "opcional", q: "A análise de datos pode ser descritiva, predictiva ou prescritiva. Que responde cada unha?",
+    o: [
+      "Descritiva: que pasou? · Predictiva: que pode pasar? · Prescritiva: que deberíamos facer?",
+      "Descritiva: que faremos? · Predictiva: que pasou? · Prescritiva: que é un dato?",
+      "Descritiva: canto custa? · Predictiva: quen o fixo? · Prescritiva: cando?",
+      "Descritiva: quen o fixo? · Predictiva: que é un dato? · Prescritiva: canto custa?"
+    ], c: [0],
+    ex: "A IA xoga un papel clave na fase de análise (descritiva, preditiva e prescritiva)." },
+
+  { ud: 2, tipo: "vf", q: "Un dato é eterno: se non se usa, mantén sempre o mesmo valor.",
+    o: ["Verdadeiro", "Falso"], c: [1],
+    ex: "Falso: un dato non é eterno. Se non se usa perde valor; se non se organiza non se entende; se non se protexe pode ser un risco." },
+
+  { ud: 2, tipo: "vf", q: "A IA non pensa nin comprende como un ser humano: analiza grandes cantidades de datos, detecta patróns e toma decisións baseadas en regras matemáticas, sen conciencia nin criterio ético propio.",
+    o: ["Verdadeiro", "Falso"], c: [0],
+    ex: "Verdadeiro: é unha idea clave do material da UD2." },
+
+  { ud: 2, tipo: "vf", q: "A IA só analiza datos, pero nunca toma decisións nin adapta o seu comportamento.",
+    o: ["Verdadeiro", "Falso"], c: [1],
+    ex: "Falso: a IA toma decisións baseadas en datos, predice comportamentos e aprende e mellora co tempo." },
+
+  { ud: 2, tipo: "opcional", q: "En que se diferencia un audiófono con IA dun audiófono tradicional ao cambiar de programa de escoita?",
+    o: [
+      "O con IA usa ubicación, hora ou decisións anteriores; o tradicional baséase no nivel de ruído",
+      "O con IA nunca cambia de programa e o tradicional cambia automaticamente",
+      "O tradicional usa deep learning e o con IA só regras fixas predefinidas",
+      "Non hai ningunha diferencia: ambos cambian só co nivel de ruído ambiente"
+    ], c: [0],
+    ex: "O exemplo do material ilustra como a IA usa contexto e experiencia, non só unha medida inmediata." },
+
+  { ud: 2, tipo: "multipla", q: "Que tarefas pode realizar a Intelixencia Artificial segundo o material?",
+    o: [
+      "Recoñecer imaxes ou sons",
+      "Entender e xerar linguaxe natural",
+      "Tomar decisións baseadas en datos e predicir comportamentos ou resultados",
+      "Aprender a partir da experiencia"
+    ], c: [0, 1, 2, 3],
+    ex: "Todas son tarefas que antes requirían intelixencia humana e agora pode realizar a IA." },
+
+  { ud: 2, tipo: "multipla", q: "Cales son as cinco etapas tecnolóxicas da evolución da IA?",
+    o: [
+      "IA simbólica ou baseada en regras",
+      "Machine Learning (aprendizaxe automática)",
+      "Redes neuronais artificiais e Deep Learning",
+      "IA xerativa (Generative AI)"
+    ], c: [0, 1, 2, 3],
+    ex: "Son etapas acumulativas (cada unha contén as anteriores), non compartimentos estancos." },
+
+  { ud: 2, tipo: "opcional", q: "Como funciona a IA simbólica ou baseada en regras?",
+    o: [
+      "Expertos definen unha por unha as condicións; o sistema compróbaas e ofrece unha saída fixa",
+      "A máquina deduce as regras por si mesma a partir dos datos de exemplo",
+      "Utiliza moitas capas de procesamento neuronal interconectadas entre si",
+      "Xera contido novo a partir de grandes cantidades de exemplos"
+    ], c: [0],
+    ex: "Era un modelo lóxico, ordenado e predicible, útil para tarefas ben estruturadas pero limitado con ruído ou situacións novas." },
+
+  { ud: 2, tipo: "opcional", q: "Cal é o salto cualitativo que introduce o Machine Learning respecto á IA simbólica?",
+    o: [
+      "A máquina aprende as regras a partir dos datos e deduce un modelo para predicir casos novos",
+      "Elimina a necesidade de datos para poder funcionar correctamente desde o inicio",
+      "Funciona exclusivamente con regras fixas definidas por expertos humanos",
+      "Non pode facer predicións sobre casos novos que ainda non coñece"
+    ], c: [0],
+    ex: "No Machine Learning o sistema analiza exemplos e deduce por si mesmo un modelo." },
+
+  { ud: 2, tipo: "multipla", q: "Que tipos de aprendizaxe automática existen segundo o material?",
+    o: [
+      "Supervisada: fornécense exemplos cos resultados esperados",
+      "Non supervisada: o sistema busca patróns sen saber previamente que debe atopar",
+      "Por reforzo: aprende por proba e erro, como un robot ou un xogador virtual",
+      "Telepática: aprende sen ningún tipo de información"
+    ], c: [0, 1, 2],
+    ex: "As tres formas de aprendizaxe son supervisada, non supervisada e por reforzo." },
+
+  { ud: 2, tipo: "opcional", q: "En que se inspiran as redes neuronais artificiais e como se compoñen?",
+    o: [
+      "No cerebro humano: capas de neuronas artificiais conectadas que se axustan ao aprender",
+      "No funcionamento dun motor de combustión e das súas pezas móbiles internas",
+      "Na estrutura de filas e columnas dunha folla de cálculo electrónica",
+      "No sistema de ramas e raíces das plantas vasculares terrestres"
+    ], c: [0],
+    ex: "Cada capa interpreta os datos dun xeito distinto, permitindo descubrir relacións moi complexas." },
+
+  { ud: 2, tipo: "opcional", q: "Que caracteriza ao Deep Learning (aprendizaxe profunda)?",
+    o: [
+      "Usa moitas capas de procesamento e require grandes volumes de datos e capacidade de cálculo",
+      "Usa unha única capa de procesamento para tarefas sinxelas e repetitivas",
+      "Non necesita datos para poder adestrarse desde o principio",
+      "É a primeira etapa histórica da evolución da intelixencia artificial"
+    ], c: [0],
+    ex: "De aí o termo profundo: moitas capas. Impulsou avances en visión por computador, linguaxe natural e sinais complexos como o son." },
+
+  { ud: 2, tipo: "opcional", q: "Que define á IA xerativa (Generative AI)?",
+    o: [
+      "Xera contido novo (textos, imaxes, son, código) aprendendo patróns a partir de masivos datos",
+      "Só clasifica datos en categorías fixas definidas previamente por expertos humanos",
+      "Segue exclusivamente regras programadas por expertos humanos",
+      "Non usa arquitecturas avanzadas nin redes neuronais profundas"
+    ], c: [0],
+    ex: "A IA xerativa produce resultados orixinais e adaptados ao contexto a partir do que aprendeu." },
+
+  { ud: 2, tipo: "vf", q: "As cinco etapas da evolución da IA son etapas acumulativas: cada unha contén ás anteriores e supón máis capacidade de aprendizaxe, autonomía e dependencia do Big Data.",
+    o: ["Verdadeiro", "Falso"], c: [0],
+    ex: "Verdadeiro: son etapas acumulativas nun proceso de sofisticación progresiva, non compartimentos estancos." },
+
+  { ud: 2, tipo: "opcional", q: "No ámbito sanitario, que permite a IA apoiada no Big Data?",
+    o: [
+      "Analizar miles de imaxes médicas en segundos, detectando tumores con gran precisión",
+      "Substituír completamente aos médicos sen ningunha validación humana",
+      "Eliminar os historiais clínicos en papel de todos os centros sanitarios",
+      "Fabricar medicinas automaticamente nas farmacias hospitalarias"
+    ], c: [0],
+    ex: "Os algoritmos de aprendizaxe profunda analizan resonancias ou radiografías para diagnosticar cancros precoces." },
+
+  { ud: 2, tipo: "multipla", q: "Selecciona as vantaxes da aplicación da IA no diagnóstico médico:",
+    o: [
+      "Detección precoz",
+      "Mellora na precisión dos diagnósticos",
+      "Redución dos tempos de espera",
+      "Non precisa ningunha validación médica humana"
+    ], c: [0, 1, 2],
+    ex: "A validación médica humana é imprescindible: é unha das limitacións e riscos citados." },
+
+  { ud: 2, tipo: "multipla", q: "Selecciona as limitacións e riscos da IA no diagnóstico médico:",
+    o: [
+      "Risco de falsos positivos ou negativos se os datos de adestramento están mal seleccionados ou conteñen sesgos",
+      "Necesidade imprescindible de validación médica humana",
+      "Os modelos son sempre perfectos e sen erros",
+      "Non pode analizar imaxes médicas"
+    ], c: [0, 1],
+    ex: "Os sesgos nos datos de adestramento e a necesidade de validación humana son os riscos sinalados." },
+
+  { ud: 2, tipo: "vf", q: "O verdadeiro valor do Big Data e da IA emerxe cando os resultados chegan ao punto onde se toman decisións que impactan no negocio, na organización ou na sociedade.",
+    o: ["Verdadeiro", "Falso"], c: [0],
+    ex: "Verdadeiro: sen unha ligazón clara entre modelo e acción, os proxectos quedan en meros exercicios analíticos." },
+
+  { ud: 2, tipo: "opcional", q: "Que obriga o RGPD (Regulamento Xeral de Protección de Datos)?",
+    o: [
+      "Garantir o consentimento explícito, minimizar os datos e explicar decisións automatizadas",
+      "Permitir recoller todos os datos posibles das persoas sen consentimento previo",
+      "Prohibir o uso da intelixencia artificial en territorio europeo",
+      "Establecer niveis de risco segundo a aplicación da IA"
+    ], c: [0],
+    ex: "O RGPD protexe as persoas fronte a decisións automatizadas como denegar un préstamo ou seleccionar un candidato." },
+
+  { ud: 2, tipo: "opcional", q: "Que establece o AI Act (Acta da Intelixencia Artificial)?",
+    o: [
+      "Clasifica a IA por niveis de risco: prohíbe usos inaceptables e regula os de alto risco",
+      "Só regula as criptomoedas e os activos dixitais da Unión Europea",
+      "Obriga a gardar todos os datos persoais dos usuarios para sempre",
+      "Subliña o dereito á identidade dixital e á portabilidade dos datos"
+    ], c: [0],
+    ex: "O AI Act clasifica a IA por niveis de risco e prohíbe os usos considerados inaceptables." },
+
+  { ud: 2, tipo: "opcional", q: "Que subliña especialmente a Carta española de Dereitos Dixitais?",
+    o: [
+      "A non discriminación algorítmica, a identidade dixital e a transparencia dos algoritmos",
+      "O dereito a non pagar impostos sobre os servizos dixitais prestados",
+      "A prohibición do comercio electrónico os domingos e días festivos",
+      "A obriga de usar só software local nas administracións públicas españolas"
+    ], c: [0],
+    ex: "A Carta céntrase na non discriminación algorítmica, a identidade dixital e a transparencia dos algoritmos." },
+
+  { ud: 2, tipo: "vf", q: "Os datos son neutros e, en consecuencia, os algoritmos que se alimentan deles tamén.",
+    o: ["Verdadeiro", "Falso"], c: [1],
+    ex: "Falso: os datos non son neutros, e o reto é ético e social: evitar que a innovación amplifique inxustizas." },
+
+  { ud: 2, tipo: "multipla", q: "Segundo o material, cales son as mellores ferramentas para que a innovación con IA e Big Data non amplifique inxustizas?",
+    o: [
+      "O rigor nos datos",
+      "A supervisión humana",
+      "A transparencia",
+      "Ocultar como se usan os algoritmos"
+    ], c: [0, 1, 2],
+    ex: "Rigor nos datos, supervisión humana e transparencia son as mellores ferramentas." },
+
+  { ud: 2, tipo: "multipla", q: "Que obrigas imperan ás organizacións co conxunto de normas europeas sobre IA e datos?",
+    o: [
+      "Documentar claramente como usan a IA",
+      "Avaliar periodicamente o seu impacto",
+      "Asegurar que existen vías para corrixir decisións erróneas ou discriminatorias",
+      "Manter en segredo absoluto calquera uso da IA"
+    ], c: [0, 1, 2],
+    ex: "As normas obrigan a documentar, avaliar e permitir corrixir decisións erróneas ou discriminatorias." },
+
+  { ud: 2, tipo: "vf", q: "A evolución tecnolóxica da IA e o Big Data debe abordarse poñendo no centro a defensa do emprego digno, os dereitos laborais e a calidade de vida das persoas traballadoras.",
+    o: ["Verdadeiro", "Falso"], c: [0],
+    ex: "Verdadeiro: desde o punto de vista sindical e social, con espírito crítico." },
+
+  { ud: 2, tipo: "opcional", q: "Que relación hai entre Big Data, análise de datos, machine/deep learning e intelixencia artificial?",
+    o: [
+      "O Big Data fornece os datos; a análise extrae información; o ML aprende e a IA decide e actúa",
+      "Son tecnoloxías completamente independentes entre si, sen relación ningunha",
+      "A IA substitúe ao Big Data ao non necesitar grandes volumes de datos",
+      "O machine learning non necesita datos para poder aprender correctamente"
+    ], c: [0],
+    ex: "A IA usa a información xerada do Big Data; o machine/deep learning é o motor de aprendizaxe a partir deses datos." },
+
+  { ud: 2, tipo: "vf", q: "As próteses auditivas poden considerarse hoxe un dispositivo máis que xera datos constantemente, como os móbiles ou os sensores.",
+    o: ["Verdadeiro", "Falso"], c: [0],
+    ex: "Verdadeiro: o material da UD2 inclúe as próteses auditivas entre os dispositivos que deixan pegada dixital." },
+
+  { ud: 2, tipo: "multipla", q: "Que fontes xeran constantemente datos no mundo hiperconectado actual?",
+    o: [
+      "Sensores e plataformas",
+      "Redes sociais e aplicacións",
+      "Dispositivos móbiles e transaccións comerciais",
+      "Ningunha: os datos só se xeran nos laboratorios"
+    ], c: [0, 1, 2],
+    ex: "Cada acción dixital deixa pegada: páxinas visitadas, compras, pasos co móbil, sensores, redes sociais..." },
+
+  { ud: 2, tipo: "opcional", q: "Para que se reutilizan algúns datos na última fase do seu ciclo de vida?",
+    o: [
+      "Para adestrar algoritmos, mellorar procesos ou compartir con terceiros, respectando a lei",
+      "Para eliminarse inmediatamente sen excepción ningunha nin copia previa",
+      "Para venderse libremente sen ningún tipo de control legal previo",
+      "Para sobrescribirse automaticamente e liberar espazo de almacenamento"
+    ], c: [0],
+    ex: "Na fase final, os datos almacénanse, elimínanse ou reutilízanse segundo o seu valor e a normativa." }
+];
+
+// ---------- Barallado de opcións ----------
+// Elimina o sesgo de posición: as opcións ("opcional" e "multipla") barállanse
+// en cada carga da páxina e os índices correctos (p.c) remapeanse en consecuencia.
+// As preguntas "vf" manteñen a orde natural Verdadeiro/Falso.
+function barallarOpcions() {
+  preguntas.forEach(p => {
+    if (p.tipo === "vf") return;
+    const idxs = p.o.map((_, i) => i);
+    for (let i = idxs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [idxs[i], idxs[j]] = [idxs[j], idxs[i]];
+    }
+    p.c = p.c.map(v => idxs.indexOf(v));
+    p.o = idxs.map(i => p.o[i]);
+  });
+}
+
+// ---------- Construción do test ----------
+const contido = document.getElementById("contido");
+const letras = ["a", "b", "c", "d"];
+let corrixidas = 0;
+
+function crearPregunta(p, idx) {
+  const div = document.createElement("div");
+  div.className = "pregunta";
+  div.id = "p" + idx;
+
+  const tipoTxt = p.tipo === "vf" ? "Verdadeiro/Falso" :
+                  p.tipo === "multipla" ? "Resposta múltiple (marcanse todas as correctas)" : "Escolle unha opción";
+
+  let html = "<div class='enunciado'><span class='num'>" + (idx + 1) + "</span>" + escapeHtml(p.q) +
+             "<span class='etiqueta-tipo'>" + tipoTxt + "</span></div><div class='opcions'>";
+  const inputTipo = p.tipo === "multipla" ? "checkbox" : "radio";
+  p.o.forEach((op, i) => {
+    html += "<label id='op-" + idx + "-" + i + "'><input type='" + inputTipo + "' name='p" + idx + "' value='" + i + "' onchange='marcarRespondida()'>" +
+            "<span>" + letras[i] + ". " + escapeHtml(op) + "</span><span class='marca' id='marca-" + idx + "-" + i + "'></span></label>";
+  });
+  html += "</div><div class='accions-pregunta'><button onclick='corrixirUnha(" + idx + ")'>Corrixir</button></div>" +
+          "<div class='resultados-pregunta' id='res-" + idx + "'></div>" +
+          "<div class='explicacion' id='exp-" + idx + "'>💡 " + escapeHtml(p.ex) + "</div>";
+  div.innerHTML = html;
+  return div;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function construit() {
+  let udActual = 0;
+  preguntas.forEach((p, idx) => {
+    if (p.ud !== udActual) {
+      udActual = p.ud;
+      const sep = document.createElement("div");
+      sep.className = "separador-ud";
+      sep.textContent = udActual === 1
+        ? "UD1 · A transformación dixital (tecnoloxías habilitadoras, nube e computación distribuída)"
+        : "UD2 · Intelixencia Artificial e Big Data (datos, 5 V, ciclo de vida, IA e regulación)";
+      contido.appendChild(sep);
+    }
+    contido.appendChild(crearPregunta(p, idx));
+  });
+  actualizarMarcador();
+}
+
+function seleccionadas(idx) {
+  return Array.from(document.querySelectorAll("input[name='p" + idx + "']:checked")).map(i => parseInt(i.value));
+}
+
+function corrixirUnha(idx) {
+  const p = preguntas[idx];
+  const sel = seleccionadas(idx);
+  const res = document.getElementById("res-" + idx);
+  const exp = document.getElementById("exp-" + idx);
+
+  if (sel.length === 0) {
+    res.className = "resultados-pregunta mal";
+    res.textContent = "⚠ Non marcaste ningunha resposta.";
+    return false;
+  }
+
+  const correctas = p.c.slice().sort();
+  const selOrd = sel.slice().sort();
+  const acerto = correctas.length === selOrd.length && correctas.every((v, i) => v === selOrd[i]);
+
+  // Marca visual de cada opción
+  p.o.forEach((_, i) => {
+    const label = document.getElementById("op-" + idx + "-" + i);
+    const marca = document.getElementById("marca-" + idx + "-" + i);
+    label.classList.remove("correcta", "incorrecta");
+    marca.textContent = "";
+    marca.className = "marca";
+    if (p.c.includes(i)) {
+      label.classList.add("correcta");
+      marca.textContent = "✔";
+      marca.classList.add("ok");
+    }
+    if (sel.includes(i) && !p.c.includes(i)) {
+      label.classList.add("incorrecta");
+      marca.textContent = "✘";
+      marca.classList.add("mal");
+    }
+  });
+
+  if (!document.getElementById("p" + idx).classList.contains("corrixida")) {
+    corrixidas++;
+    document.getElementById("p" + idx).classList.add("corrixida");
+  }
+
+  if (acerto) {
+    res.className = "resultados-pregunta bien";
+    res.textContent = "✔ Correcto";
+  } else {
+    res.className = "resultados-pregunta mal";
+    const esperadas = p.c.map(i => letras[i]).join(", ");
+    res.textContent = "✘ Incorrecto. Resposta(s) correcta(s): " + esperadas;
+  }
+  exp.style.display = "block";
+  actualizarMarcador();
+  return acerto;
+}
+
+function corrixirTodo() {
+  let acertos = 0;
+  preguntas.forEach((_, idx) => { if (corrixirUnha(idx)) acertos++; });
+  const resumo = document.getElementById("resumo");
+  resumo.style.display = "block";
+  document.getElementById("notaFinal").textContent = acertos + " / " + TOTAL;
+  document.getElementById("detalleFinal").textContent =
+    acertos >= 90 ? "Excelente! Dominas a materia." :
+    acertos >= 70 ? "Moi ben! Repasa as preguntas falladas antes do exame." :
+    acertos >= 50 ? "Aprobado por pouco. Convén repasar o material das UD1 e UD2." :
+    "Necesitas repasar o material das unidades. Lee de novo os PDF e volve intentalo.";
+  resumo.scrollIntoView({ behavior: "smooth" });
+}
+
+function reiniciar() {
+  document.querySelectorAll("input[type='radio'], input[type='checkbox']").forEach(i => i.checked = false);
+  document.querySelectorAll(".pregunta").forEach(d => { d.classList.remove("corrixida"); });
+  document.querySelectorAll(".opcions label").forEach(l => l.classList.remove("correcta", "incorrecta"));
+  document.querySelectorAll(".marca").forEach(m => { m.textContent = ""; m.className = "marca"; });
+  document.querySelectorAll(".resultados-pregunta").forEach(r => { r.textContent = ""; r.className = "resultados-pregunta"; });
+  document.querySelectorAll(".explicacion").forEach(e => e.style.display = "none");
+  corrixidas = 0;
+  document.getElementById("resumo").style.display = "none";
+  actualizarMarcador();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function marcarRespondida() { actualizarMarcador(); }
+
+function actualizarMarcador() {
+  const respondidas = new Set();
+  document.querySelectorAll("input[type='radio']:checked, input[type='checkbox']:checked").forEach(i => {
+    respondidas.add(i.name);
+  });
+  document.getElementById("marcador").textContent = "Correctas: " + contarAcertos() + " / " + TOTAL + " · Respondidas: " + respondidas.size + " / " + TOTAL;
+  document.getElementById("barra").style.width = (respondidas.size / TOTAL * 100) + "%";
+}
+
+function contarAcertos() {
+  let n = 0;
+  preguntas.forEach((p, idx) => {
+    const sel = seleccionadas(idx).sort();
+    const c = p.c.slice().sort();
+    if (sel.length === c.length && c.every((v, i) => v === sel[i])) n++;
+  });
+  return n;
+}
+
+barallarOpcions();
+construit();
+</script>
+</body>
+</html>
